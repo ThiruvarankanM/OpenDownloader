@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+
+# Environment — never commit secrets
+.env
+.env.*
+!.env.example
+
+# Google session / browser cache — set up separately per deployment
+.browser-data/
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
+npm-debug.log*
+
+# Temp download files
+/tmp/loadr_*
+
+# Local editor / OS artifacts
+.vscode/
+.idea/
