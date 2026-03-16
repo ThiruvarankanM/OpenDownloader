@@ -1,129 +1,153 @@
 # OpenDownloader
 
-Download Google Drive view-only videos as a single MP4.
-Paste a share link → pick quality → download. No extensions, no screen recording.
+<p align="center">
+  <strong>Universal video, audio, and thumbnail downloader with a clean web UI.</strong>
+</p>
 
----
+<p align="center">
+  <a href="https://github.com/ThiruvarankanM/OpenDownloader/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-0B7A75" alt="License: MIT"></a>
+  <img src="https://img.shields.io/badge/node-%3E%3D20-14532d" alt="Node 20+">
+  <img src="https://img.shields.io/badge/frontend-Tool%20Based%20UX-0f766e" alt="Tool based UX">
+  <img src="https://img.shields.io/badge/backend-Express%20%2B%20Playwright%20%2B%20yt--dlp-1d4ed8" alt="Backend stack">
+</p>
 
-## How it works
+OpenDownloader helps you fetch media from supported links through one focused interface:
+- Video download (MP4)
+- Audio extraction (MP3/M4A)
+- Thumbnail download (original/PNG/JPG/WEBP)
 
-1. **Fetch** — OpenDownloader opens the Drive link in a real Chrome session and intercepts the video/audio stream URLs.
-2. **Select** — Choose the quality you want (1080p, 720p, 480p, …).
-3. **Download** — Both streams are downloaded using your saved Google session, merged into one file, and delivered to your browser as a single MP4.
+It includes task progress tracking, cancellation support, optional local auth bypass for development, and Docker-ready deployment files.
 
----
+## Table of contents
 
-## Requirements
+- [Highlights](#highlights)
+- [Supported workflows](#supported-workflows)
+- [Platform compatibility](#platform-compatibility)
+- [Architecture](#architecture)
+- [Quick start (local)](#quick-start-local)
+- [Production-style local validation](#production-style-local-validation)
+- [Docker deployment](#docker-deployment)
+- [Nginx reverse proxy](#nginx-reverse-proxy)
+- [Environment variables](#environment-variables)
+- [Security and privacy](#security-and-privacy)
+- [Contributing](#contributing)
+- [Roadmap ideas](#roadmap-ideas)
+- [Troubleshooting](#troubleshooting)
+- [License](#license)
 
-| Tool | Version |
-|------|---------|
-| Node.js | >= 20 |
-| Google Chrome | latest stable |
-| ffmpeg | any recent |
+## Highlights
 
-> **Docker users:** Chrome, ffmpeg, and Xvfb are all installed inside the image — no manual setup needed.
+- Modern tool-based UI with clear flow for video, audio, and thumbnail tasks.
+- Background task lifecycle: analyze, start, poll progress, cancel, serve file.
+- Google Drive support with browser-auth session capture.
+- Universal mode powered by yt-dlp for many public platforms.
+- Secure defaults in production: JWT cookies, rate limiting, CORS, and Helmet.
+- Fast local development mode with auth bypass when `NODE_ENV=development`.
 
----
+## Supported workflows
+
+| Workflow | Output | Notes |
+|---|---|---|
+| Video Downloader | MP4 | Quality selection supported |
+| Video to Audio | MP3, M4A | Converted/extracted via backend pipeline |
+| Thumbnail Downloader | Original, PNG, JPG, WEBP | Thumbnail conversion handled in app flow |
+
+## Platform compatibility
+
+OpenDownloader supports:
+- Google Drive links (including protected/view-only flows after auth setup)
+- A broad set of public video platforms via yt-dlp
+
+Compatibility can vary by platform policy, content restrictions, login requirements, and link type.
+
+## Architecture
+
+### Backend
+- Express API server
+- Auth routes (`/api/auth/*`)
+- Video/task routes (`/api/video/*`)
+- Service layer for analyze/download/cancel/status
+- Stream serving with temporary file cleanup
+
+### Tooling stack
+- Playwright for browser automation and authenticated media capture
+- yt-dlp for universal platform extraction
+- ffmpeg for mux/conversion tasks
+
+### Frontend
+- Single-page UI served from `public/`
+- Tool switcher for mode-based actions
+- Progress polling and task cancellation
 
 ## Quick start (local)
 
 ```bash
 # 1. Clone and install
-git clone <repo-url>
-cd opendownloader
+git clone https://github.com/ThiruvarankanM/OpenDownloader.git
+cd OpenDownloader
 npm install
 
 # 2. Configure environment
 cp .env.example .env
-# For local dev only, you can run with NODE_ENV=development and no login (AUTH_BYPASS defaults to true)
-# For production, set AUTH_BYPASS=false and configure JWT_SECRET, ADMIN_USERNAME, ADMIN_PASSWORD_HASH
 
-# 3. Sign in to Google (one-time, saves session locally)
+# 3. (Optional but recommended) Capture Google auth session
 npm run setup:auth
 
-# 4. Start
-npm start
-# Open http://localhost:3000
-```
-
-## Local production-like test checklist
-
-Run this checklist before web deployment:
-
-```bash
-# 1. Install dependencies
-npm install
-
-# 2. Start in watch mode for development
+# 4. Start server
 npm run dev
 
-# Note: in development, auth bypass is enabled by default.
-# The app opens directly without login/JWT cookies.
-
-# 3. In a second terminal, verify server is reachable
-curl http://localhost:3000
-
-# 4. Run one full flow for each workflow in UI
-# - Video Downloader
-# - Audio Converter (MP3/M4A)
-# - Thumbnail Downloader (PNG/JPG/WEBP)
+# 5. Open app
+# http://localhost:3000
 ```
 
-Open-source note:
+Development behavior:
+- When `NODE_ENV=development`, auth bypass is enabled by default unless overridden.
+- In production, set `AUTH_BYPASS=false` and provide secure auth variables.
 
-- Add your repository URL in the top header Contribute button inside `public/index.html`.
-- Keep CONTRIBUTING.md in your repo root so contributors can onboard quickly.
+## Production-style local validation
 
-## GitHub publish safety checklist
-
-Before pushing to GitHub:
-
-- Ensure `.env` is not committed (only `.env.example` should be tracked).
-- Ensure `.browser-data/` is not committed.
-- Ensure `node_modules/` is not committed.
-- Rotate JWT/password secrets if they were ever shared accidentally.
-- Run `npm audit --omit=dev` and confirm there are no high/critical issues.
-
-### Generate credentials
+Use this before deploying:
 
 ```bash
-# JWT secret
-node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+# Install dependencies
+npm install
 
-# bcrypt password hash (replace 'yourpassword')
-node -e "import('bcryptjs').then(b => b.default.hash('yourpassword', 12).then(console.log))"
+# Start app
+npm run dev
+
+# Verify server is reachable
+curl http://localhost:3000
+
+# Optional: health/auth check
+curl http://localhost:3000/api/auth/status
 ```
 
----
+Manual UI validation checklist:
+- Test Video Downloader flow end-to-end.
+- Test MP3 and M4A conversion flow.
+- Test Thumbnail download flow for all output options.
+- Test cancel action during active downloads.
 
 ## Docker deployment
 
-### 1. Build and start
-
 ```bash
 cp .env.example .env
-# Edit .env with your real values
+# Edit .env for your deployment
 
 docker compose up -d --build
 ```
 
-### 2. Set up Google auth (one-time)
+### One-time Google auth setup
 
-The Google session must be captured on a machine **with a display** (your local machine or a VPS with VNC/X11).
-
-**Option A — set up locally, copy to server:**
+Option A (recommended): capture session on local machine and copy `.browser-data/` to server.
 
 ```bash
-# On your local machine (Chrome must be installed)
 npm install
 npm run setup:auth
-# Sign in to Google when Chrome opens, then close the browser window
-
-# Copy the saved session to your server
-rsync -av .browser-data/ user@yourserver:/path/to/opendownloader/.browser-data/
+rsync -av .browser-data/ user@yourserver:/path/to/OpenDownloader/.browser-data/
 ```
 
-**Option B — X11 forwarding on a VPS:**
+Option B: use X11 forwarding on VPS.
 
 ```bash
 ssh -X user@yourserver
@@ -133,23 +157,12 @@ docker compose run --rm \
   opendownloader node scripts/setup-auth.js
 ```
 
-### 3. Verify
-
-```bash
-curl http://localhost:3000/api/auth/status
-# 401 Unauthorized — expected, login required
-```
-
----
-
-## Nginx reverse proxy (recommended)
+## Nginx reverse proxy
 
 ```nginx
 server {
     listen 443 ssl;
     server_name yourdomain.com;
-
-    # Your SSL config here ...
 
     location / {
         proxy_pass         http://127.0.0.1:3000;
@@ -157,8 +170,6 @@ server {
         proxy_set_header   X-Real-IP         $remote_addr;
         proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
         proxy_set_header   X-Forwarded-Proto $scheme;
-
-        # Required for large file streaming
         proxy_buffering    off;
         proxy_read_timeout 600s;
         proxy_send_timeout 600s;
@@ -168,37 +179,87 @@ server {
 
 Set `ALLOWED_ORIGINS=https://yourdomain.com` in your `.env`.
 
----
-
 ## Environment variables
 
 | Variable | Required | Description |
-|----------|----------|-------------|
-| `JWT_SECRET` | Yes | Random string, minimum 32 characters |
-| `ADMIN_USERNAME` | Yes | Login username |
-| `ADMIN_PASSWORD_HASH` | Yes | bcrypt hash of your password |
-| `ALLOWED_ORIGINS` | Yes | Comma-separated list of allowed origins |
-| `PORT` | No | Server port (default `3000`) |
-| `AUTH_BYPASS` | No | Set `true` to bypass login/JWT for local development only (default true in development, false in production) |
-| `JWT_ACCESS_EXPIRY` | No | Access token lifetime (default `15m`) |
-| `JWT_REFRESH_EXPIRY` | No | Refresh token lifetime (default `7d`) |
-| `RATE_LIMIT_MAX` | No | API requests per 15 min window (default `50`) |
-| `DOWNLOAD_RATE_MAX` | No | Download starts per 15 min window (default `5`) |
+|---|---|---|
+| `JWT_SECRET` | Yes (production) | Random string (at least 32 chars) |
+| `ADMIN_USERNAME` | Yes (production) | Admin login username |
+| `ADMIN_PASSWORD_HASH` | Yes (production) | bcrypt hash of password |
+| `ALLOWED_ORIGINS` | Yes | Comma-separated allowed origins |
+| `PORT` | No | Server port (default: `3000`) |
+| `AUTH_BYPASS` | No | `true` for local dev convenience |
+| `JWT_ACCESS_EXPIRY` | No | Access token lifetime (default: `15m`) |
+| `JWT_REFRESH_EXPIRY` | No | Refresh token lifetime (default: `7d`) |
+| `RATE_LIMIT_MAX` | No | API max requests per 15 min |
+| `DOWNLOAD_RATE_MAX` | No | Download starts per 15 min |
 
----
+Credential helpers:
 
-## Security notes
+```bash
+# Generate JWT secret
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 
-- In production (`AUTH_BYPASS=false`), every route requires a valid login session with signed httpOnly cookies (JWT).
-- In local development (`NODE_ENV=development`), auth bypass is enabled by default for faster testing.
-- Rate limiting is enforced on all API and download endpoints.
-- `.browser-data/` contains your Google session — keep it private and never commit it.
-- Downloaded streams are written to the system temp directory and deleted immediately after each download completes.
+# Generate bcrypt hash for a password
+node -e "import('bcryptjs').then(b => b.default.hash('yourpassword', 12).then(console.log))"
+```
 
----
+## Security and privacy
+
+- Production mode uses signed JWT cookies and auth-protected routes.
+- Rate limiting is enabled for auth, API, and download actions.
+- `.browser-data/` contains sensitive Google session data. Never commit it.
+- `.env` should never be committed. Use `.env.example` as template.
+- Temporary download artifacts are cleaned after file serving.
+
+GitHub safety checklist:
+- Confirm `.env` is untracked.
+- Confirm `.browser-data/` is untracked.
+- Confirm `node_modules/` is untracked.
+- Rotate secrets if they were exposed.
+
+## Contributing
+
+Contributions are welcome and appreciated.
+
+If you want to improve OpenDownloader, this is a great place to start:
+
+1. Fork the repository.
+2. Create a branch: `feat/your-change` or `fix/your-bug`.
+3. Keep commits focused and descriptive.
+4. Test your changes locally.
+5. Open a pull request with a clear summary and test notes.
+
+Contributor tips:
+- Keep UX copy honest and avoid unsupported platform claims.
+- Prefer small, reviewable PRs.
+- Document behavior changes in README when relevant.
+- For major features, include a short validation checklist in the PR.
+
+You can open issues for bugs, ideas, or documentation improvements at:
+https://github.com/ThiruvarankanM/OpenDownloader/issues
+
+## Roadmap ideas
+
+- Better download queue management and prioritization.
+- Download history and retry UX.
+- Optional file naming templates.
+- Expanded integration and API tests.
+
+## Troubleshooting
+
+Common fixes:
+- `AUTH_REQUIRED` for Google Drive:
+  Run `npm run setup:auth` and complete sign-in.
+- `yt-dlp` not found:
+  Run `npm run setup:ytdlp` or install yt-dlp manually.
+- Download fails after analysis:
+  Re-analyze URL and verify the source link is still valid/public.
+- Auth/cookie problems in production:
+  Recheck `JWT_SECRET`, `ALLOWED_ORIGINS`, and HTTPS proxy settings.
 
 ## License
 
-This project is licensed under the MIT License. See [LICENSE](./LICENSE).
+MIT License. See [LICENSE](./LICENSE).
 
-Please still respect copyright law and each platform's terms of service, including [Google Drive's Terms of Service](https://policies.google.com/terms).
+Please use this project responsibly and comply with copyright law and each platform's terms.
