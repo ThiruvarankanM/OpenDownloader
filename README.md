@@ -21,6 +21,7 @@ It includes task progress tracking, cancellation support, optional local auth by
 ## Table of contents
 
 - [Highlights](#highlights)
+- [Screenshots](#screenshots)
 - [Supported workflows](#supported-workflows)
 - [Platform compatibility](#platform-compatibility)
 - [Architecture](#architecture)
@@ -43,6 +44,29 @@ It includes task progress tracking, cancellation support, optional local auth by
 - Universal mode powered by yt-dlp for many public platforms.
 - Secure defaults in production: JWT cookies, rate limiting, CORS, and Helmet.
 - Fast local development mode with auth bypass when `NODE_ENV=development`.
+
+## Screenshots
+
+Main landing page:
+
+<p align="center">
+  <img src="docs/screenshots/Homepage.png" alt="OpenDownloader Homepage" width="90%" />
+</p>
+
+Core workflows:
+
+<p align="center">
+  <img src="docs/screenshots/1.png" alt="Video downloader workflow" width="48%" />
+  <img src="docs/screenshots/2.png" alt="Audio or thumbnail workflow" width="48%" />
+</p>
+
+Task and result state:
+
+<p align="center">
+  <img src="docs/screenshots/3.png" alt="Task progress and result state" width="80%" />
+</p>
+
+Image source files are stored in `docs/screenshots/` so they render correctly in GitHub and in forks.
 
 ## Supported workflows
 
