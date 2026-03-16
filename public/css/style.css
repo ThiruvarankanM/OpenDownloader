@@ -1085,6 +1085,9 @@ input:focus {
 }
 
 .pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.38rem;
   background: rgba(95, 140, 255, 0.1);
   border: 1px solid rgba(95, 140, 255, 0.25);
   border-radius: 99px;
@@ -1093,6 +1096,14 @@ input:focus {
   font-weight: 500;
   letter-spacing: 0.03em;
   padding: 0.3rem 0.75rem;
+}
+
+.pill-icon {
+  width: 14px;
+  height: 14px;
+  display: inline-block;
+  object-fit: contain;
+  flex-shrink: 0;
 }
 
 .pill-button {
