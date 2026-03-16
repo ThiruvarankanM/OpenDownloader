@@ -1,0 +1,16 @@
+services:
+  opendownloader:
+    build: .
+    ports:
+      - "${PORT:-3000}:3000"
+    env_file: .env
+    environment:
+      - NODE_ENV=production
+    volumes:
+      # Persist the Google session across container restarts
+      - browser-profile:/app/.browser-data
+    restart: unless-stopped
+    shm_size: "256mb"       # Chrome needs extra shared memory
+
+volumes:
+  browser-profile:

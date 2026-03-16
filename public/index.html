@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenDownloader — Universal Video Downloader</title>
+  <meta name="description" content="Download videos from YouTube, Instagram, Facebook, TikTok, Twitter/X, Vimeo, and Google Drive. Paste a supported link, pick quality, and download as MP4." />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+  <!-- ── Login overlay ─────────────────────────────────── -->
+  <div id="login-overlay" class="overlay hidden" role="dialog" aria-modal="true" aria-label="Sign in">
+    <div class="login-card">
+      <div class="login-logo">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+          <rect width="28" height="28" rx="8" fill="#6366f1"/>
+          <path d="M14 6v10m0 0-4-4m4 4 4-4M7 20h14" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>OpenDownloader</span>
+      </div>
+      <h2>Sign in to continue</h2>
+      <p class="login-sub">Access is restricted to authorised users.</p>
+      <form id="login-form" novalidate>
+        <div class="field">
+          <label for="username">Username</label>
+          <input id="username" type="text" autocomplete="username" placeholder="admin" required />
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input id="password" type="password" autocomplete="current-password" placeholder="••••••••" required />
+        </div>
+        <div id="login-error" class="form-error hidden" role="alert"></div>
+        <button type="submit" id="login-btn" class="btn btn-primary btn-full">
+          <span class="btn-label">Sign in</span>
+          <span class="btn-spinner hidden" aria-hidden="true"></span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ── App ────────────────────────────────────────────── -->
+  <div id="app" class="hidden">
+
+    <header class="site-header">
+      <a href="/" class="brand" aria-label="OpenDownloader home">
+        <svg width="22" height="22" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+          <rect width="28" height="28" rx="8" fill="#6366f1"/>
+          <path d="M14 6v10m0 0-4-4m4 4 4-4M7 20h14" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        OpenDownloader
+      </a>
+      <div class="header-actions">
+        <a
+          class="btn btn-github btn-sm"
+          href="https://github.com/ThiruvarankanM/OpenDownloader"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Contribute to OpenDownloader on GitHub"
+        >
+          <span class="github-badge" aria-hidden="true">
+            <img class="github-mark" src="/assets/images/github-mark.png" alt="" />
+          </span>
+          Star & Contribute
+        </a>
+        <button id="logout-btn" class="btn btn-ghost btn-sm">Sign out</button>
+      </div>
+    </header>
+
+    <main class="container">
+
+      <section class="hero">
+          <p class="hero-kicker">Open Source Video Toolkit</p>
+          <h1>One place for<br/><span class="hero-accent">video downloads and conversions.</span></h1>
+          <p class="hero-sub">Paste a supported link from YouTube, Instagram, Facebook, TikTok, Twitter/X, Vimeo, or <span class="hero-highlight">Google Drive (including view-only links)</span>. OpenDownloader delivers one clean, high-quality output with no extensions and no screen recording.</p>
+          <div class="hero-points" aria-label="Main highlights">
+            <span class="hero-point">Google Drive view-only ready</span>
+            <span class="hero-point">Stop and resume-friendly workflow</span>
+            <span class="hero-point">Open source and self-hostable</span>
+          </div>
+      </section>
+
+      <section class="card tool-switcher" aria-label="Available tools">
+        <div class="tool-switcher-copy">
+          <h3 class="section-label">Choose Tool</h3>
+          <p class="tool-switcher-note">All workflows are listed here. Pick one first, then paste the link and OpenDownloader will generate the output for that tool.</p>
+        </div>
+        <div id="output-grid" class="output-grid" role="group" aria-label="Tool options"></div>
+      </section>
+
+        <!-- Platform pills -->
+        <div class="platform-pills" aria-label="Supported platforms">
+          <span class="pill">▶ YouTube</span>
+          <span class="pill">📸 Instagram</span>
+          <span class="pill">👍 Facebook</span>
+          <span class="pill">🎵 TikTok</span>
+          <span class="pill">🐦 Twitter / X</span>
+          <span class="pill">🎬 Vimeo</span>
+          <span class="pill">☁️ Google Drive</span>
+          <button id="platforms-toggle" class="pill pill-more pill-button" type="button" aria-expanded="false" aria-controls="supported-platforms">Other compatible sites</button>
+        </div>
+
+        <section id="supported-platforms" class="card supported-platforms hidden" aria-live="polite">
+          <div class="supported-platforms-header">
+            <div>
+              <h3 class="section-label">Recognized Platforms</h3>
+              <p class="supported-platforms-sub">These are the platform families currently recognized by the backend. Some edge-case URLs on these services can still fail.</p>
+            </div>
+            <button id="platforms-close" class="btn btn-ghost btn-sm" type="button">Close</button>
+          </div>
+          <div id="platforms-status" class="supported-platforms-status">Loading supported platforms…</div>
+          <div id="platforms-list" class="supported-platforms-list"></div>
+        </section>
+
+      <!-- URL input -->
+      <section class="url-card card">
+        <form id="analyze-form" novalidate>
+          <div class="url-row">
+            <input
+              id="url-input"
+              type="url"
+              placeholder="Paste any video link — YouTube, Instagram, Drive…"
+              autocomplete="off"
+              spellcheck="false"
+              aria-label="Video link"
+              required
+            />
+            <button type="submit" id="analyze-btn" class="btn btn-primary">
+              <span class="btn-label">Fetch</span>
+              <span class="btn-spinner hidden" aria-hidden="true"></span>
+            </button>
+          </div>
+          <div id="url-error" class="form-error hidden" role="alert"></div>
+        </form>
+        <p id="url-hint" class="url-hint">Supports YouTube, Instagram, Facebook, TikTok, Twitter/X, Vimeo, and Google Drive files or folders. Other sites may work when compatible with the underlying downloader.</p>
+      </section>
+
+      <!-- Google Drive folder picker (shown when a folder link is entered) -->
+      <section id="folder-section" class="card hidden" aria-live="polite">
+        <div class="folder-header">
+          <h3 class="section-label" id="folder-title">Folder contents</h3>
+          <p class="folder-sub">Click a video below to download it.</p>
+        </div>
+        <ul id="folder-file-list" class="folder-file-list"></ul>
+      </section>
+
+      <!-- Analyzing notice (shown during Fetch) -->
+      <div id="analyzing-notice" class="notice hidden" role="status" aria-live="polite">
+        <span class="notice-spin" aria-hidden="true"></span>
+        <div>
+          <strong>Fetching video info…</strong>
+          <span>This takes 10–25 seconds on the first run.</span>
+        </div>
+      </div>
+
+      <!-- Results -->
+      <section id="results" class="hidden" aria-live="polite">
+
+        <div class="card meta-card" id="meta-card">
+          <div class="meta-thumb-wrap">
+            <img id="meta-thumb" src="" alt="" class="meta-thumb" loading="lazy" />
+          </div>
+          <div class="meta-info">
+            <p class="meta-platform" id="meta-platform"></p>
+            <h2 class="meta-title" id="meta-title"></h2>
+            <p class="meta-uploader" id="meta-uploader"></p>
+          </div>
+        </div>
+
+        <div class="card quality-card">
+          <div class="output-header">
+            <div>
+              <h3 class="section-label">Current Workflow</h3>
+              <p id="output-note" class="output-note">Choose Video Downloader for MP4, Video to MP3 for audio extraction, or Thumbnail Downloader for source images.</p>
+            </div>
+          </div>
+          <h3 id="format-section-label" class="section-label">Select quality</h3>
+          <div id="quality-grid" class="quality-grid" role="group" aria-label="Quality options"></div>
+          <div id="audio-format-row" class="audio-format-row hidden">
+            <label for="audio-format-select" class="audio-format-label">Audio format</label>
+            <select id="audio-format-select" class="audio-format-select" aria-label="Audio format">
+              <option value="mp3">MP3</option>
+              <option value="m4a">M4A</option>
+            </select>
+          </div>
+          <div id="image-format-row" class="image-format-row hidden">
+            <label for="image-format-select" class="image-format-label">Image format</label>
+            <select id="image-format-select" class="image-format-select" aria-label="Thumbnail image format">
+              <option value="original">Original source format</option>
+              <option value="png">PNG</option>
+              <option value="jpg">JPG</option>
+              <option value="webp">WEBP</option>
+            </select>
+          </div>
+          <p id="quality-note" class="quality-note">Video and audio are combined into a single MP4 file.</p>
+        </div>
+
+        <!-- Download button -->
+        <div class="download-bar">
+          <div class="download-actions">
+            <button id="download-btn" class="btn btn-primary btn-download" disabled aria-disabled="true">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 3v13m0 0-5-5m5 5 5-5M3 20h18"/>
+              </svg>
+              <span id="download-btn-label">Select a quality above</span>
+            </button>
+            <button id="stop-btn" class="btn btn-stop hidden" type="button">
+              <span class="btn-label">Stop</span>
+              <span class="btn-spinner hidden" aria-hidden="true"></span>
+            </button>
+          </div>
+          <p class="download-hint" id="download-hint">Pick a quality to unlock the download action.</p>
+        </div>
+
+        <!-- Progress panel (shown while task runs) -->
+        <div id="progress-panel" class="progress-panel hidden" role="status" aria-live="polite">
+          <div class="progress-steps" id="progress-steps">
+            <div class="pstep" data-step="video">
+              <span class="pstep-icon" aria-hidden="true"></span>
+              <span class="pstep-label">Downloading video</span>
+            </div>
+            <div class="pstep" data-step="audio">
+              <span class="pstep-icon" aria-hidden="true"></span>
+              <span class="pstep-label">Downloading audio</span>
+            </div>
+            <div class="pstep" data-step="merge">
+              <span class="pstep-icon" aria-hidden="true"></span>
+              <span class="pstep-label">Merging streams</span>
+            </div>
+          </div>
+          <div class="prog-bar-wrap" role="progressbar" aria-label="Download progress">
+            <div class="prog-bar-fill" id="prog-bar"></div>
+          </div>
+          <p id="progress-detail" class="progress-detail"></p>
+        </div>
+
+        <div id="download-result" class="download-result hidden" role="status" aria-live="polite">
+          <div class="download-result-copy">
+            <p class="download-result-kicker">Downloaded</p>
+            <h3 id="download-result-title" class="download-result-title">Your video is ready</h3>
+            <p id="download-result-meta" class="download-result-meta"></p>
+          </div>
+          <div class="download-result-actions">
+            <button id="open-preview-btn" class="btn btn-ghost" type="button">Open preview</button>
+            <button id="save-again-btn" class="btn btn-primary" type="button">Save again</button>
+            <button id="dismiss-download-result-btn" class="btn btn-ghost" type="button">Dismiss</button>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+
+    <footer class="site-footer">
+      <p>For personal use only &mdash; respect copyright and each platform&rsquo;s terms of service.</p>
+    </footer>
+
+  </div>
+
+  <!-- Skeleton loading template -->
+  <template id="skeleton-tmpl">
+    <div class="card meta-card skeleton-card" id="skeleton-placeholder" aria-hidden="true">
+      <div class="skel skel-thumb"></div>
+      <div class="meta-info">
+        <div class="skel skel-line skel-short"></div>
+        <div class="skel skel-line skel-long"></div>
+      </div>
+    </div>
+  </template>
+
+  <script src="/js/app.js" type="module"></script>
+</body>
+</html>
