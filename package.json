@@ -2,7 +2,7 @@
   "name": "opendownloader",
   "version": "1.0.0",
   "description": "Download videos from YouTube, Instagram, Facebook, TikTok, Twitter/X, Vimeo, and Google Drive.",
-  "license": "MIT",
+  "license": "SEE LICENSE IN LICENSE",
   "type": "module",
   "engines": {
     "node": ">=20"

@@ -1,21 +1,35 @@
-MIT License
+OpenDownloader Source-Available License v1.0
 
-Copyright (c) 2026 ThiruvarankanM
+Copyright (c) 2026 ThiruvarankanM. All rights reserved.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+1. Scope
+This license applies to the OpenDownloader source code and all associated files in this repository (the "Software").
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+2. Limited permission granted
+You may:
+- View the source code.
+- Download and run the Software for personal, non-commercial evaluation.
+- Create and share patches or pull requests to the original repository.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+3. Restrictions
+Without prior written permission from the copyright owner, you may not:
+- Host, deploy, publish, or operate the Software (or modified versions) as a public or private service.
+- Distribute, sublicense, sell, rent, or otherwise monetize the Software.
+- Redistribute copies of the Software, in source or binary form, except as part of a pull request diff to the original repository.
+- Remove or alter copyright, license, or attribution notices.
+
+4. Ownership
+All intellectual property rights remain with the copyright owner.
+No trademark rights are granted by this license.
+
+5. Termination
+Any use that violates this license automatically terminates your rights under this license.
+
+6. Disclaimer of warranty
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
+
+7. Limitation of liability
+IN NO EVENT SHALL THE COPYRIGHT OWNER BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+8. Contact for commercial or deployment rights
+For commercial use, redistribution, or deployment rights, contact the copyright owner.
