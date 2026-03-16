@@ -1,0 +1,14 @@
+# Prevent sensitive and unnecessary files from entering Docker build context
+node_modules
+npm-debug.log*
+.env
+.env.*
+!.env.example
+.browser-data
+.git
+.gitignore
+.vscode
+.idea
+.github
+README.md
+LICENSE
