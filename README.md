@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/ThiruvarankanM/OpenDownloader/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-0B7A75" alt="License: MIT"></a>
+  <a href="https://github.com/ThiruvarankanM/OpenDownloader/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-Source%20Available-0B7A75" alt="License: Source Available"></a>
   <img src="https://img.shields.io/badge/node-%3E%3D20-14532d" alt="Node 20+">
   <img src="https://img.shields.io/badge/frontend-Tool%20Based%20UX-0f766e" alt="Tool based UX">
   <img src="https://img.shields.io/badge/backend-Express%20%2B%20Playwright%20%2B%20yt--dlp-1d4ed8" alt="Backend stack">
@@ -31,7 +31,7 @@ It includes task progress tracking, cancellation support, optional local auth by
 - [Nginx reverse proxy](#nginx-reverse-proxy)
 - [Environment variables](#environment-variables)
 - [Security and privacy](#security-and-privacy)
-- [Contributing](#contributing)
+- [Community and support](#community-and-support)
 - [Roadmap ideas](#roadmap-ideas)
 - [Troubleshooting](#troubleshooting)
 - [License](#license)
@@ -66,7 +66,7 @@ Task and result state:
   <img src="docs/screenshots/3.png" alt="Task progress and result state" width="80%" />
 </p>
 
-Image source files are stored in `docs/screenshots/` so they render correctly in GitHub and in forks.
+Image source files are stored in `docs/screenshots/` so they render correctly in GitHub.
 
 ## Supported workflows
 
@@ -153,6 +153,8 @@ Manual UI validation checklist:
 - Test cancel action during active downloads.
 
 ## Docker deployment
+
+Note: deployment rights are restricted by the project license and reserved to the copyright owner unless explicit written permission is granted.
 
 ```bash
 cp .env.example .env
@@ -242,26 +244,14 @@ GitHub safety checklist:
 - Confirm `node_modules/` is untracked.
 - Rotate secrets if they were exposed.
 
-## Contributing
+## Community and support
 
-Contributions are welcome and appreciated.
+Community feedback is welcome through Issues.
 
-If you want to improve OpenDownloader, this is a great place to start:
-
-1. Fork the repository.
-2. Create a branch: `feat/your-change` or `fix/your-bug`.
-3. Keep commits focused and descriptive.
-4. Test your changes locally.
-5. Open a pull request with a clear summary and test notes.
-
-Contributor tips:
-- Keep UX copy honest and avoid unsupported platform claims.
-- Prefer small, reviewable PRs.
-- Document behavior changes in README when relevant.
-- For major features, include a short validation checklist in the PR.
-
-You can open issues for bugs, ideas, or documentation improvements at:
+You can open issues for bug reports, ideas, or documentation improvements at:
 https://github.com/ThiruvarankanM/OpenDownloader/issues
+
+Code usage rights are governed by the LICENSE file. Public source visibility does not grant permission to host, resell, or redeploy this project.
 
 ## Roadmap ideas
 
@@ -284,6 +274,6 @@ Common fixes:
 
 ## License
 
-MIT License. See [LICENSE](./LICENSE).
+OpenDownloader Source-Available License. See [LICENSE](./LICENSE).
 
 Please use this project responsibly and comply with copyright law and each platform's terms.
