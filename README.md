@@ -31,8 +31,8 @@ It includes task progress tracking, cancellation support, optional local auth by
 - [Nginx reverse proxy](#nginx-reverse-proxy)
 - [Environment variables](#environment-variables)
 - [Security and privacy](#security-and-privacy)
-- [Community and support](#community-and-support)
-- [Roadmap ideas](#roadmap-ideas)
+- [For contributors](#for-contributors)
+- [Future implementation ideas](#future-implementation-ideas)
 - [Troubleshooting](#troubleshooting)
 - [License](#license)
 
@@ -244,21 +244,53 @@ GitHub safety checklist:
 - Confirm `node_modules/` is untracked.
 - Rotate secrets if they were exposed.
 
-## Community and support
+## For contributors
 
-Community feedback is welcome through Issues.
+Use this short checklist before opening a PR:
 
-You can open issues for bug reports, ideas, or documentation improvements at:
+1. Keep changes focused (one bugfix or one small improvement per PR).
+2. Run local validation (`npm install`, `npm run dev`) and verify the changed flow.
+3. Include a clear PR summary and test notes.
+4. Do not add claims about unsupported platforms.
+
+Issue tracker:
 https://github.com/ThiruvarankanM/OpenDownloader/issues
 
-Code usage rights are governed by the LICENSE file. Public source visibility does not grant permission to host, resell, or redeploy this project.
+Rights note: this repository is source-available. Deployment, redistribution, and commercial use are not allowed without written permission from the owner.
 
-## Roadmap ideas
+## Future implementation ideas
 
-- Better download queue management and prioritization.
-- Download history and retry UX.
-- Optional file naming templates.
-- Expanded integration and API tests.
+Potential next features contributors can work on:
+
+**Download experience**
+1. YouTube playlist support (full playlist queue with per-item progress and retry).
+2. Batch URL processing (paste multiple links at once, download all).
+3. Queue controls (pause, resume, reorder, cancel individual items or all).
+4. Download history (list of past downloads with re-download option).
+5. Resume interrupted downloads automatically.
+
+**Quality & format**
+6. Audio-only download mode — extract and save as MP3/M4A/OPUS.
+7. Advanced quality selector (1080p / 720p / 480p / Best / Custom).
+8. Format chooser — MP4, MKV, WEBM per download.
+9. Subtitle/caption download where available (SRT/VTT), with burn-in option.
+
+**Sharing & storage**
+10. Copy direct download link to clipboard instead of saving locally.
+11. Save directly to cloud (Google Drive, Dropbox) via API.
+12. Browser share sheet integration on mobile.
+
+**User convenience**
+13. Browser extension / bookmarklet — one-click send URL from any page.
+14. Dark/light theme toggle with system preference sync.
+15. Download speed display and ETA in the progress bar.
+16. Notification (browser push) when a long download finishes.
+17. Clip trimming — choose start and end time before downloading.
+
+**Discovery**
+18. Thumbnail preview and video duration shown before downloading.
+19. Channel/profile batch download (grab all public videos from a creator).
+20. Short-link and redirect resolver (t.co, bit.ly, etc.) before fetch.
 
 ## Troubleshooting
 
